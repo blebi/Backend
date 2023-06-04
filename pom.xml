@@ -9,20 +9,16 @@
 		<version>3.1.0</version>
 		<relativePath />
 	</parent>
-	<artifactId>application</artifactId>
-	<version>0.0.1</version>
-	
-	<name>web-app</name>
-	<description>Demo project for Spring Boot</description>
+	<artifactId>server</artifactId>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
 	<build>
 		<finalName>server</finalName>
-		<sourceDirectory>.</sourceDirectory>
+		<sourceDirectory>application</sourceDirectory>
 		<resources>
 			<resource>
-				<directory>resources</directory>
+				<directory>application/resources</directory>
 			</resource>
 		</resources>
 		<plugins>
@@ -66,9 +62,5 @@
 			<artifactId>json-smart</artifactId>
 			<version>2.4.10</version>
 		</dependency>
-
 	</dependencies>
-
-	
-
 </project>

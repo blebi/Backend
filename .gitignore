@@ -1,0 +1,8 @@
+/.mvn
+/.idea
+/.vscode
+/target
+Dockerfile
+entrypoint.sh
+mvnw
+mvnw.cmd
