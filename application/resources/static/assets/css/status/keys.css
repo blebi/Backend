@@ -1,0 +1,97 @@
+.key-container {
+  width: 10%;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin: 1%;
+}
+
+.key {
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-image: url(/assets/img/key.png);
+  height: 100%;
+  aspect-ratio: 2;
+}
+
+.key-mask {
+  position: relative;
+  -webkit-mask: url(/assets/img/key.png) center/contain no-repeat;
+  mask: url(/assets/img/key.png) center/contain no-repeat;
+  height: 100%;
+  opacity: 70%;
+}
+
+.key-mask.iron {
+  background-color: #5b5b5b;
+}
+
+.key-mask.gold {
+  background-color: gold;
+}
+
+.key-mask.diamond {
+  background-color: cyan;
+}
+
+
+/* KEYS */
+.dungeon-key {
+  position: absolute;
+  height: 4%;
+}
+
+.dungeon-key.blue-iron {
+  top: 11%;
+  right: 8%;
+}
+
+.dungeon-key.blue-gold {
+  top: 54%;
+  right: 8%;
+}
+
+.dungeon-key.blue-diamond {
+  top: 11%;
+  right: 36%;
+}
+
+.dungeon-key.red-iron {
+  bottom: 11%;
+  left: 8%;
+}
+
+.dungeon-key.red-gold {
+  bottom: 54%;
+  left: 8%;
+}
+
+.dungeon-key.red-diamond {
+  bottom: 11%;
+  left: 36%;
+}
+
+
+/*
+
+.key-container2 {
+  width: 15%;
+}
+
+.key2 {
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-image: url(/assets/img/key.png);
+  height: 100%;
+  aspect-ratio: 1;
+}
+
+.key-mask2 {
+  position: relative;
+  -webkit-mask: url(/assets/img/key.png) center/contain no-repeat;
+  mask: url(/assets/img/key.png) center/contain no-repeat;
+  height: 100%;
+  opacity: 70%;
+}*/

@@ -1,0 +1,29 @@
+@font-face {
+  font-family: "minecraft";
+  src: url(/assets/fonts/Minecraft-Regular.otf) format("opentype");
+}
+
+html,
+body {
+  background-color: black;
+  color: white;
+  height: 99%;
+  font-family: "minecraft";
+}
+
+.password {
+  height: 100%;
+  display: flex;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.password input.password-input {
+  border-radius: 20px;
+  text-align: center;
+  font-size: 50px;
+  margin-bottom: 10%;
+      max-width: 90vw;
+}

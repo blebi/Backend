@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="/assets/bootstrap/css/bootstrap.min.css" />
+    <!--<base href="/">-->
+    <link rel="stylesheet" type="text/css" href="/assets/css/login.css" />
+    <link th:href="@{/assets/css/login.css}" rel="stylesheet" />
+    <title>Log in</title>
+</head>
+
+<body>
+
+    <div class="password">
+        
+        <!--<div th:if="${param.logout}">
+            You have been logged out.
+        </div>-->
+        <h1>Enter the Passcode</h1>
+        <form th:action="@{/login}" method="post">
+            <div><input type="hidden" name="username" value="user" readonly /></div>
+            <div><input class="password-input" type="password" name="password" /> </div>
+        </form>
+        <div th:if="${param.error}">
+            Try Again!
+        </div>
+    </div>
+
+</body>
+
+</html>

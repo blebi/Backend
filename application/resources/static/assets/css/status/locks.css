@@ -1,0 +1,73 @@
+.lock-container {
+  width: 7%;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin: 1%;
+}
+
+.lock {
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-image: url(/assets/img/lock.png);
+  height: 100%;
+  aspect-ratio: 1;
+}
+
+.lock-mask {
+  position: relative;
+  -webkit-mask: url(/assets/img/lock.png) center/contain no-repeat;
+  mask: url(/assets/img/lock.png) center/contain no-repeat;
+  height: 100%;
+  opacity: 70%;
+}
+
+.lock-mask.iron {
+  background-color: #5b5b5b;
+}
+
+.lock-mask.gold {
+  background-color: gold;
+}
+
+.lock-mask.diamond {
+  background-color: cyan;
+}
+
+/* LOCKS */
+.dungeon-lock {
+  position: absolute;
+  height: 7%;
+}
+
+.dungeon-lock.blue-iron {
+  top: 37%;
+  right: 9%;
+}
+
+.dungeon-lock.blue-gold {
+  top: 9%;
+  right: 53%;
+}
+
+.dungeon-lock.blue-diamond {
+  top: 9%;
+  right: 82%;
+}
+
+.dungeon-lock.red-iron {
+  bottom: 37%;
+  left: 9%;
+}
+
+.dungeon-lock.red-gold {
+  bottom: 9%;
+  left: 53%;
+}
+
+.dungeon-lock.red-diamond {
+  bottom: 9%;
+  left: 82%;
+}
+

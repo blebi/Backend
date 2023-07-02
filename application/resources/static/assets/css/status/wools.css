@@ -1,0 +1,90 @@
+
+
+
+.wool {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0.5%;
+  width: 10%;
+}
+
+.wool-status {
+  width: 15%;
+}
+
+/*.wool-status.red {
+  filter: drop-shadow(4px 0 0 red) drop-shadow(0 4px 0 red)
+    drop-shadow(-4px 0 0 red) drop-shadow(0 -4px 0 red);
+}
+
+.wool-status.blue {
+  filter: drop-shadow(4px 0 0 blue) drop-shadow(0 4px 0 blue)
+    drop-shadow(-4px 0 0 blue) drop-shadow(0 -4px 0 blue);
+}*/
+
+
+.monument-wool {
+  position: absolute;
+  width: 10%;
+}
+
+.monument-wool.BLUE-wool-1 {
+  top: 2%;
+  right: 16.5%;
+}
+
+.monument-wool.BLUE-wool-2 {
+  top: 2%;
+  right: 2%;
+}
+
+.monument-wool.BLUE-wool-3 {
+  top: 16.5%;
+  right: 2%;
+}
+
+.monument-wool.RED-wool-1 {
+  bottom: 2%;
+  left: 16.5%;
+}
+
+.monument-wool.RED-wool-2 {
+  bottom: 2%;
+  left: 2%;
+}
+
+.monument-wool.RED-wool-3 {
+  bottom: 16.5%;
+  left: 2%;
+}
+
+.monument-wool.blue-iron {
+  top: 53%;
+  right: -4%;
+}
+
+.monument-wool.blue-gold {
+  top: -6%;
+  right: 51%;
+}
+
+.monument-wool.blue-diamond {
+  top: -6%;
+  left: -4%;
+}
+
+.monument-wool.red-iron {
+  bottom: 53%;
+  left: -4%;
+}
+
+.monument-wool.red-gold {
+  bottom: -6%;
+  left: 51%;
+}
+
+.monument-wool.red-diamond {
+  bottom: -6%;
+  right: -4%;
+}

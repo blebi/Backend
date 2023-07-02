@@ -11,17 +11,31 @@
 	</parent>
 	<artifactId>server</artifactId>
 	<properties>
+		<version.java>17</version.java>
 		<java.version>17</java.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.release>${version.java}</maven.compiler.release>
+		<maven.compiler.source>${version.java}</maven.compiler.source>
+		<maven.compiler.target>${version.java}</maven.compiler.target>
+		<start-class>server.Application</start-class>
 	</properties>
 	<build>
 		<finalName>server</finalName>
 		<sourceDirectory>application</sourceDirectory>
 		<resources>
 			<resource>
+				<directory>resources</directory>
+			</resource>
+			<resource>
 				<directory>application/resources</directory>
 			</resource>
 		</resources>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
+			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
@@ -50,7 +64,7 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<scope>annotationProcessor</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -61,6 +75,32 @@
 			<groupId>net.minidev</groupId>
 			<artifactId>json-smart</artifactId>
 			<version>2.4.10</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webflux</artifactId>
 		</dependency>
 	</dependencies>
 </project>

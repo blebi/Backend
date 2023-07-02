@@ -1,2 +1,9 @@
 server:
   port: 8082
+
+spring:
+  datasource:
+    hikari:
+      connectionTimeout: 600000
+      idleTimeout: 600000
+      maximum-pool-size: 6000

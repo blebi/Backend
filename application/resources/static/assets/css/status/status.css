@@ -1,0 +1,210 @@
+@font-face {
+  font-family: "minecraft";
+  src: url(/assets/fonts/Minecraft-Regular.otf) format("opentype");
+}
+
+body {
+  background-color: black;
+  color: black;
+  font-size: 2vh;
+  font-family: "minecraft";
+}
+
+.main {
+  height: 100vh;
+  width: 100vw;
+  /*overflow: hidden;*/
+  overflow-x: hidden;
+  padding: 2vmin;
+}
+
+.player-head-wrapper {
+  position: relative;
+  display: inline-flex;
+  width: 29%;
+  margin: 2%;
+  height: auto;
+  image-rendering: pixelated;
+  aspect-ratio: 1;
+  /*transition: 1s linear;*/
+  z-index: 8;
+
+  align-items: center;
+  justify-content: center;
+}
+
+.player-head-wrapper.grow {
+  position: absolute;
+  width: 60% !important;
+  z-index: 11;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+}
+
+.player-head-class {
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+}
+
+.player-head-wool {
+  position: absolute;
+  right: -40%;
+  top: -40%;
+  height: 80%;
+  z-index: 10;
+}
+
+.player-head-key {
+  left: -61%;
+  top: -43%;
+  height: 55%;
+  z-index: 10;
+  filter: drop-shadow(100% 100% 0 rgb(140, 255, 0))
+    drop-shadow(-5% -5% 0 rgb(68, 255, 0));
+}
+
+.player-head-key .key {
+  background-color: rgba(0, 0, 0, 0.537);
+  margin: 5%;
+}
+
+.player-status-head-column {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  aspect-ratio: 1.2;
+}
+
+.player-status-head {
+  width: 25%;
+  position: absolute;
+  image-rendering: pixelated;
+  padding: 0 1% 0 3%;
+}
+
+.player-status-head-class {
+  width: 25%;
+  position: absolute;
+  image-rendering: pixelated;
+  padding: 0 1% 0 3%;
+}
+
+.island {
+  align-self: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  position: relative;
+  transition: 1s;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+}
+
+
+.map {
+  background-image: url(/assets/img/map.png);
+  background-size: cover;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: repeat(7, 1fr);
+  aspect-ratio: 1;
+  max-height: 85vh;
+  position: relative;
+      margin: 5.5% 4% 5.5% 3.1%;
+}
+
+.player-panel {
+  background-color: grey;
+  overflow: hidden;
+  position: relative;
+}
+
+.death-overlay {
+  width: 100%;
+  height: 100%;
+  z-index: 13;
+  background-color: rgba(255, 0, 0, 0.721);
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20pt;
+}
+
+.player-health {
+  height: auto;
+  width: 9%;
+  margin: 2px 1px 2px 1px;
+  padding: 0px;
+  image-rendering: pixelated;
+}
+
+.status-col {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.pixelated {
+  image-rendering: pixelated;
+}
+
+.notifications {
+  z-index: 1000;
+  position: absolute;
+  width: 90%;
+  height: 50px;
+  /*padding-left: 25%;*/
+  /*padding-right: 25%;*/
+  justify-content: center;
+}
+
+.notification {
+  background-color: gray;
+  color: black;
+  font-size: 18pt;
+  font-family: "minecraft";
+  text-align: center;
+  padding: 5%;
+  width: 100%;
+  border-radius: 100vw;
+  border: #414141;
+  border-width: 8pt;
+  border-style: solid;
+}
+
+.offline {
+  position: absolute;
+  margin: auto;
+  top: 0;
+  right: 8%;
+  left: 28%;
+  bottom: 0;
+  height: 70%;
+  display: flex;
+  font-size: 2vh;
+  text-align: center;
+  vertical-align: middle;
+  z-index: 10;
+  background: dimgrey;
+  border: black;
+  border-style: solid;
+  color: red;
+  justify-content: center;
+  align-items: center;
+}
+
+.stat-bar {
+  padding-right: 10%;
+}
