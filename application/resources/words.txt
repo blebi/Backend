@@ -85,7 +85,6 @@ Goshawk
 Grasshopper
 Grouse
 Guanaco
-
 Gull
 Hamster
 Hare
@@ -169,14 +168,12 @@ Raccoon
 Ram
 Rat
 Raven
-
 Rhinoceros
 Rook
 Salamander
 Salmon
 Sandpiper
 Sardine
-
 Seahorse
 Seal
 Shark
