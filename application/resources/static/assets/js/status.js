@@ -258,7 +258,7 @@ function setLocations(players) {
             src: player.imgLink
         })).append($('<img>', {
             class: 'player-head-class',
-            src: "/assets/img/classes/unknown.png"
+            src: getPlayer(player).playerClass ? ("/assets/img/classes/" + getPlayer(player).playerClass + ".png") : "/assets/img/classes/unknown.png"
         }).hide()).append($('<img>', {
             class: 'player-head-wool',
             src: !player.wool ? ""

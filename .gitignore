@@ -1,8 +1,12 @@
-/.mvn
-/.idea
-/.vscode
-/target
+.mvn
+.idea
+.vscode
+target 
+application/target
 Dockerfile
 entrypoint.sh
 mvnw
 mvnw.cmd
+node_modules
+package.json
+package-lock.json
