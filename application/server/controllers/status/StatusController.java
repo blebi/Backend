@@ -33,6 +33,7 @@ import server.services.GameStatusService;
 import server.services.PlayerService;
 
 @Controller
+@Transactional
 @RequestMapping("/ctw/status")
 public class StatusController {
   private final SseEmitters emitters = new SseEmitters();
@@ -89,6 +90,7 @@ public class StatusController {
     return emitter;
   }
 
+
   @PostMapping("/update/player")
   @ResponseBody
   Player postPlayer(@RequestBody Player player, HttpServletResponse response) {
@@ -114,8 +116,8 @@ public class StatusController {
     if (!playerService.hasPlayer(id)) {
       response.setStatus(201);
       player = objectMapper.readValue(playerJSON.toJSONString(), Player.class);
-      //System.out.println(player);
-    } else {
+    } 
+    else {
       player = playerService.getPlayer(id);
       ObjectReader reader = objectMapper.readerForUpdating(player);
       player = reader.readValue(playerJSON.toJSONString());
@@ -143,7 +145,6 @@ public class StatusController {
       player.setDead(false);
       playerService.savePlayer(player);
     }
-    //System.out.println(result + "\n\n\n");
     return result;
   }
 
@@ -152,6 +153,7 @@ public class StatusController {
   @SuppressWarnings("unchecked")
   List<Player> patchPlayers(@RequestBody JSONArray playerArrayJSON, HttpServletResponse response)
       throws JsonMappingException, JsonProcessingException {
+
     emitters.send(playerArrayJSON);
     List<Player> result = new ArrayList<>();
 
@@ -164,7 +166,8 @@ public class StatusController {
       if (!playerService.hasPlayer(id)) {
         response.setStatus(201);
         player = objectMapper.readValue(playerJSON.toString(), Player.class);
-      } else {
+      } 
+      else {
         player = playerService.getPlayer(id);
         ObjectReader reader = objectMapper.readerForUpdating(player);
         player = reader.readValue(playerJSON.toString());
@@ -172,6 +175,7 @@ public class StatusController {
       player.setDead(false);
       result.add(playerService.savePlayer(player));
     }
+    //emitters.send(playerArrayJSON);
     return result;
   }
 
@@ -182,7 +186,7 @@ public class StatusController {
     return message;
   }
 
-  @PostMapping("/event")
+  @PostMapping("/update/event")
   @ResponseBody
   GameStatus postGameEvent(@RequestBody GameStatus event) {
     gameStatusService.saveGameStatus(event);

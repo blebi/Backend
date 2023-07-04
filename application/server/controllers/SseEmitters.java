@@ -16,7 +16,7 @@ public class SseEmitters {
   private final List<SseEmitter> emitters = new CopyOnWriteArrayList<>();
 
   public SseEmitter add() {
-    return add(new SseEmitter(600000L));
+    return add(new SseEmitter(60000000L));
   }
 
   public SseEmitter add(SseEmitter emitter) {
@@ -52,7 +52,7 @@ public class SseEmitters {
       } catch (Exception e) {
         emitter.completeWithError(e);
         failedEmitters.add(emitter);
-        logger.error("Emitter failed: {}", emitter, e);
+        logger.error("Emitter failed: {}", emitter);
       }
     });
 
