@@ -2,6 +2,9 @@ package server.configs;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.SecureRandom;
 
 import org.springframework.context.annotation.Bean;
@@ -67,6 +70,15 @@ public class WebSecurityConfig {
 
     String password = words[secureRandom.nextInt(words.length)] + "-" + words[secureRandom.nextInt(words.length)] + "-"
         + words[secureRandom.nextInt(words.length)];
+
+    try {
+      Path path = Paths.get("passcode.txt");
+      byte[] strToBytes = password.getBytes();
+      path.toFile().deleteOnExit();
+      Files.write(path, strToBytes);
+
+    } catch (IOException e) {
+    }
     System.out.println("#############################################################");
     System.out.println(password);
     System.out.println("#############################################################");

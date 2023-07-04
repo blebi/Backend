@@ -7,3 +7,7 @@ spring:
       connectionTimeout: 6000
       idleTimeout: 600000
       maximum-pool-size: 100
+
+logging:
+  file:
+    path: ./logs
