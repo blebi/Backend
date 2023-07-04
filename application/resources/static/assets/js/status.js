@@ -6,11 +6,6 @@ var masonryOptions = {
     transitionDuration: 0,
     initLayout: false
 };
-var masonryOptionsMain = {
-    percentPosition: true,
-    isResizable: true,
-    itemSelector: '.main-grid-item'
-};
 // initialize Masonry
 var $grid = $('.grid').masonry(masonryOptions);
 setTimeout(function () {
@@ -25,6 +20,7 @@ $(document).on('mousemove', function (e) {
     });
 });
 $('.item-info').hide();
+var playersMap = new Map();
 class Player {
 }
 class InventoryItem {
@@ -39,25 +35,77 @@ function sendNotification(message) {
         });
     }, 5000);
 }
-function setStatus(players) {
-    //var panel = $("#" + player.id + "_status");
-    players.forEach(function (player) {
-        if (!player.team) {
-            $("#" + player.id + "_location").remove();
+function updatePlayer(player) {
+    if (player.imgLink == null) {
+        player.imgLink = "https://mc-heads.net/avatar/" + player.id + "/16";
+    }
+    if (!playersMap.has(player.id)) {
+        playersMap.set(player.id, player);
+        return player;
+    }
+    var existingPlayer = playersMap.get(player.id);
+    if (player.name !== undefined)
+        existingPlayer.name = player.name;
+    if (player.health !== undefined)
+        existingPlayer.health = player.health;
+    if (player.maxHealth !== undefined)
+        existingPlayer.maxHealth = player.maxHealth;
+    if (player.location !== undefined)
+        existingPlayer.location = player.location;
+    if (player.inventory !== undefined)
+        existingPlayer.inventory = player.inventory;
+    if (player.team !== undefined)
+        existingPlayer.team = player.team;
+    if (player.imgLink !== undefined)
+        existingPlayer.imgLink = player.imgLink;
+    if (player.playerClass !== undefined)
+        existingPlayer.playerClass = player.playerClass;
+    if (player.wool !== undefined)
+        existingPlayer.wool = player.wool;
+    if (player.dungeon_key !== undefined)
+        existingPlayer.dungeon_key = player.dungeon_key;
+    if (player.online !== undefined)
+        existingPlayer.online = player.online;
+    if (player.dead !== undefined)
+        existingPlayer.dead = player.dead;
+    return existingPlayer;
+}
+function getPlayer(player) {
+    return playersMap.get(player.id);
+}
+function onTeam(player) {
+    if (!player) {
+        return false;
+    }
+    return (player.team != null && (player.team === "BLUE" || player.team === "RED"));
+}
+function setStatus(updates) {
+    updates.forEach(function (player) {
+        if (!onTeam(player)) {
             $("#" + player.id + "_status").remove();
         }
     });
-    players = players.filter(function (player) {
-        return player.team === "BLUE" || player.team === "RED";
-    });
-    players.forEach(player => {
+    var players = new Array();
+    updates.forEach(player => {
         if (player.imgLink == null) {
             player.imgLink = "https://mc-heads.net/avatar/" + player.id + "/16";
+        }
+        //If wasn't on team before.......
+        if (!onTeam(getPlayer(player))) {
+            // but is now, update
+            if (onTeam(player)) {
+                players.push(updatePlayer(player));
+            }
+        }
+        else {
+            players.push(player);
+            updatePlayer(player);
         }
     });
     createPlayerPanels(players);
     setLocations(players);
     players.forEach(player => {
+        setTeam(player);
         setClass(player);
         setName(player);
         setHealth(player);
@@ -66,7 +114,6 @@ function setStatus(players) {
         setWool(player);
         setKey(player);
         setOnline(player);
-        setTeam(player);
     });
     $grid.masonry('reloadItems').masonry('layout');
 }
@@ -138,12 +185,7 @@ function setKey(player) {
     }
 }
 function setLocations(players) {
-    players = players.filter(function (player) {
-        return player.location !== undefined;
-    });
     var moves = new Map();
-    var transitions = new Map();
-    //var affectedLocations = new Set<string>();
     var affectedHeadIds = new Set();
     function getPlaceholder(id) {
         return $('<div>', {
@@ -166,17 +208,22 @@ function setLocations(players) {
     }
     players.forEach(function (player) {
         var head = $("#" + player.id + "_location");
-        //REMOVE HEAD
-        if (player.location === null) {
+        //HEAD EXISTS, REMOVE HEAD
+        if (head.length && (player.location === null || player.team === null)) {
             head.parent().children().each(function () {
                 affectedHeadIds.add(this.id);
             });
-            head.remove();
+            moves.set(head.attr("id"), null);
+            return;
+        }
+        //NOT REMOVING OR MOVING HEAD
+        if (player.location === undefined) {
             return;
         }
         //HEAD ALREADY IN CORRECT LOCATION
-        if (head.parent().attr('id') === player.location)
+        if (head.parent().attr('id') === player.location) {
             return;
+        }
         /**********************************/
         var newLocation = $("#" + player.location);
         //HEAD EXISTS, MOVE TO NEW LOCATION
@@ -185,9 +232,6 @@ function setLocations(players) {
             currentLocation.children().each(function () {
                 affectedHeadIds.add(this.id);
             });
-            var list = transitions.has(newLocation.attr("id")) ? transitions.get(newLocation.attr("id")) : [];
-            list === null || list === void 0 ? void 0 : list.push(head.attr("id"));
-            transitions.set(newLocation.attr("id"), list);
             moves.set(head.attr("id"), newLocation.attr("id"));
             newLocation.children().each(function () {
                 affectedHeadIds.add(this.id);
@@ -235,6 +279,13 @@ function setLocations(players) {
             $("#" + player.id + "_location .player-head-class").hide("fast");
         });
     });
+    affectedHeadIds.forEach(function (headId) {
+        var head = $("#" + headId);
+        if (!moves.has(headId)) {
+            moves.set(headId, head.parent().attr("id"));
+        }
+    });
+    moveTo(moves);
     function moveTo(heads) {
         var tops = new Map();
         var lefts = new Map();
@@ -250,45 +301,48 @@ function setLocations(players) {
         });
         heads.forEach(function (locationId, headId) {
             var head = $("#" + headId);
-            var location = $("#" + locationId);
+            var location = locationId ? $("#" + locationId) : null;
+            //Stamp in place
             head.css({
                 position: "absolute",
                 top: tops.get(headId),
                 left: lefts.get(headId),
             });
-            var placeholder = getPlaceholder(head.attr("id"));
-            location.append(placeholder);
-            setPlaceholderWidths(location);
-            head.delay(10).queue(function () {
-                setPlaceholderWidths(location);
-                var left = placeholder.offset().left - head.offset().left;
-                var top = placeholder.offset().top - head.offset().top;
-                head.animate({
-                    top: "+=" + top,
-                    left: "+=" + left,
-                    width: (placeholder[0].getBoundingClientRect().width / location[0].getBoundingClientRect().width) * 100 + "%",
-                    opacity: "100%"
-                }, 300, function () {
-                    head.css({
-                        position: "",
-                        top: "",
-                        left: "",
-                        margin: "",
-                        opacity: ""
-                    });
-                    placeholder.replaceWith(head);
+            if (!location) {
+                head.delay(10).hide(300, function () {
+                    this.remove();
                 });
-                head.dequeue();
-            });
+            }
+            else {
+                //Insert a placeholder
+                var placeholder = getPlaceholder(head.attr("id"));
+                location.append(placeholder);
+                setPlaceholderWidths(location);
+                //Move head to placeholder
+                head.delay(10).queue(function () {
+                    setPlaceholderWidths(location);
+                    var left = placeholder.offset().left - head.offset().left;
+                    var top = placeholder.offset().top - head.offset().top;
+                    head.animate({
+                        top: "+=" + top,
+                        left: "+=" + left,
+                        width: (placeholder[0].getBoundingClientRect().width / location[0].getBoundingClientRect().width) * 100 + "%",
+                        opacity: "100%"
+                    }, 300, function () {
+                        head.css({
+                            position: "",
+                            top: "",
+                            left: "",
+                            margin: "",
+                            opacity: ""
+                        });
+                        placeholder.replaceWith(head);
+                    });
+                    head.dequeue();
+                });
+            }
         });
     }
-    affectedHeadIds.forEach(function (headId) {
-        var head = $("#" + headId);
-        if (!moves.has(headId)) {
-            moves.set(headId, head.parent().attr("id"));
-        }
-    });
-    moveTo(moves);
 }
 function setHealth(player) {
     if (player.health == null)
@@ -367,7 +421,11 @@ function createPlayerPanels(players) {
         class: "panels_temp",
     });
     players.forEach(function (player) {
+        //IF PANEL ALREADY EXISTS, RETURN
         if ($("#" + player.id + "_status").length)
+            return;
+        //IF PLAYER ISN'T ON RED/BLUE TEAM, RETURN
+        if (getPlayer(player).team !== "BLUE" && getPlayer(player).team !== "RED")
             return;
         var gridItem = $('<div>', {
             id: player.id + "_status",
@@ -550,6 +608,9 @@ function handleGameEvent(event) {
             if (event.entity.endsWith("lock")) {
                 $(".dungeon-lock." + event.entity.replace("-lock", "")).hide("slow");
             }
+            else if (event.entity.endsWith("key")) {
+                $(".dungeon-key." + event.entity.replace("-key", "")).hide("slow");
+            }
             break;
         default:
             console.log("invalid event type: " + event.status);
@@ -564,6 +625,12 @@ function clear() {
     });
     $(".monument-wool").each(function () {
         this.removeAttribute('src');
+    });
+    $(".dungeon-lock").each(function () {
+        $(this).show();
+    });
+    $(".dungeon-key").each(function () {
+        $(this).show();
     });
 }
 if (window.EventSource != null) {

@@ -4,6 +4,6 @@ server:
 spring:
   datasource:
     hikari:
-      connectionTimeout: 600000
+      connectionTimeout: 6000
       idleTimeout: 600000
-      maximum-pool-size: 6000
+      maximum-pool-size: 100
