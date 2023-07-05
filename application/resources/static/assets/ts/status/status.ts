@@ -793,9 +793,20 @@ function clear() {
 
 }
 
+var playerSource: EventSource;
+var notificationSource: EventSource;
+var eventSource: EventSource;
+
 if (window.EventSource != null) {
+  setListeners();
+}
+else {
+  alert("The browser does not support Server-Sent Events");
+}
+
+function setListeners() {
   //PLAYERS
-  var playerSource = new EventSource("/ctw/status/sse");
+  playerSource = new EventSource("/ctw/status/sse");
   playerSource.onopen = function () {
     console.log("connection is established");
   };
@@ -810,8 +821,9 @@ if (window.EventSource != null) {
       setStatus(([] as Player[]).concat(JSON.parse(event.data)));
   };
 
+
   //NOTIFICATIONS
-  var notificationSource = new EventSource("/ctw/status/sse/notification");
+  notificationSource = new EventSource("/ctw/status/sse/notification");
   notificationSource.onopen = function () {
     console.log("notification connection is established");
   };
@@ -824,7 +836,7 @@ if (window.EventSource != null) {
   };
 
   //EVENTS
-  var eventSource = new EventSource("/ctw/status/sse/event");
+  eventSource = new EventSource("/ctw/status/sse/event");
   eventSource.onopen = function () {
     console.log("game event connection is established");
   };
@@ -841,6 +853,14 @@ if (window.EventSource != null) {
       handleGameEvent(events);
   };
 }
-else {
-  alert("The browser does not support Server-Sent Events");
-}
+
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) {
+    playerSource.close();
+    eventSource.close();
+    notificationSource.close();
+  } else {
+    //location.reload();
+    setListeners();
+  }
+});

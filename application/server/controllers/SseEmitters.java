@@ -23,11 +23,11 @@ public class SseEmitters {
     this.emitters.add(emitter);
 
     emitter.onCompletion(() -> {
-      logger.info("Emitter completed: {}", emitter);
+      //logger.info("Emitter completed: {}", emitter);
       this.emitters.remove(emitter);
     });
     emitter.onTimeout(() -> {
-      logger.info("Emitter timed out: {}", emitter);
+      //logger.info("Emitter timed out: {}", emitter);
       emitter.complete();
       this.emitters.remove(emitter);
     });
@@ -52,7 +52,7 @@ public class SseEmitters {
       } catch (Exception e) {
         emitter.completeWithError(e);
         failedEmitters.add(emitter);
-        logger.error("Emitter failed: {}", emitter);
+        //logger.error("Emitter failed: {}", emitter);
       }
     });
 
