@@ -109,6 +109,9 @@ body {
   align-content: center;
 }
 
+.map-col {
+  position: relative;
+}
 
 .map {
   background-image: url(/assets/img/map.png);
@@ -119,7 +122,7 @@ body {
   aspect-ratio: 1;
   max-height: 85vh;
   position: relative;
-      margin: 5.5% 4% 5.5% 3.1%;
+  margin: 5.5% 4% 5.5% 3.1%;
 }
 
 .player-panel {
@@ -163,10 +166,10 @@ body {
 .notifications {
   z-index: 1000;
   position: absolute;
-  width: 90%;
-  height: 50px;
-  /*padding-left: 25%;*/
-  /*padding-right: 25%;*/
+  width: 80%;
+  height: 5px;
+  margin-left: 10%;
+  margin-right: 10%;
   justify-content: center;
 }
 
@@ -176,12 +179,13 @@ body {
   font-size: 18pt;
   font-family: "minecraft";
   text-align: center;
-  padding: 5%;
+  padding: 10pt;
   width: 100%;
   border-radius: 100vw;
   border: #414141;
   border-width: 8pt;
   border-style: solid;
+  opacity: 75%;
 }
 
 .offline {
