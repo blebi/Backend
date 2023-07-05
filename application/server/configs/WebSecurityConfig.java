@@ -14,9 +14,11 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -25,6 +27,8 @@ import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
+
+  private static InMemoryUserDetailsManager userManager;
 
   @Bean
   @Order(1)
@@ -82,13 +86,46 @@ public class WebSecurityConfig {
     System.out.println("#############################################################");
     System.out.println(password);
     System.out.println("#############################################################");
-    UserDetails user = User.withDefaultPasswordEncoder()
+    UserDetails user = User.builder()
         .username("user")
         .password(password)
         .roles("USER")
         .build();
 
-    return new InMemoryUserDetailsManager(user);
+    userManager = new InMemoryUserDetailsManager(user);
+    return userManager;
+  }
+
+  @Bean
+  @SuppressWarnings("deprecation")
+  public static NoOpPasswordEncoder passwordEncoder() {
+    return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();
+  }
+
+  public static void updatePasscode() {
+    
+    try {
+      String[] words = new ClassPathResource("words.txt").getContentAsString(Charset.defaultCharset()).split("\n");
+      SecureRandom secureRandom = new SecureRandom();
+
+      String passcode = words[secureRandom.nextInt(words.length)] + "-" + words[secureRandom.nextInt(words.length)]
+          + "-"
+          + words[secureRandom.nextInt(words.length)];
+
+      userManager.updatePassword(userManager.loadUserByUsername("user"), passcode);
+
+      Path path = Paths.get("passcode.txt");
+      byte[] strToBytes = passcode.getBytes();
+      path.toFile().deleteOnExit();
+      Files.write(path, strToBytes);
+
+      System.out.println("#############################################################");
+      System.out.println(passcode);
+      System.out.println("#############################################################");
+      SecurityContextHolder.clearContext();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
 }

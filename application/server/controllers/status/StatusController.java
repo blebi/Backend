@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +26,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
+import server.configs.WebSecurityConfig;
 import server.controllers.SseEmitters;
 import server.models.GameStatus;
 import server.models.Player;
@@ -61,6 +63,7 @@ public class StatusController {
     playerService.clear();
     gameStatusService.clear();
     emitters.send("clear");
+    WebSecurityConfig.updatePasscode();
     return "cleared";
   }
 
@@ -86,10 +89,9 @@ public class StatusController {
   @GetMapping("/sse/notification")
   SseEmitter getSSENotifications() {
     SseEmitter emitter = notificationEmitters.add();
-    
+
     return emitter;
   }
-
 
   @PostMapping("/update/player")
   @ResponseBody
@@ -116,8 +118,7 @@ public class StatusController {
     if (!playerService.hasPlayer(id)) {
       response.setStatus(201);
       player = objectMapper.readValue(playerJSON.toJSONString(), Player.class);
-    } 
-    else {
+    } else {
       player = playerService.getPlayer(id);
       ObjectReader reader = objectMapper.readerForUpdating(player);
       player = reader.readValue(playerJSON.toJSONString());
@@ -166,8 +167,7 @@ public class StatusController {
       if (!playerService.hasPlayer(id)) {
         response.setStatus(201);
         player = objectMapper.readValue(playerJSON.toString(), Player.class);
-      } 
-      else {
+      } else {
         player = playerService.getPlayer(id);
         ObjectReader reader = objectMapper.readerForUpdating(player);
         player = reader.readValue(playerJSON.toString());
@@ -204,18 +204,18 @@ public class StatusController {
     eventEmitters.send(resultEvents);
     return resultEvents;
   }
-  
-/*
+
+  /*
   private void initTest() {
     Random rand = new Random();
-
+  
     Location[] locations = Player.Location.values();
     locations = Arrays.copyOfRange(locations, 1, 3);
-
+  
     String[] classes = { "Barbarian", "Messenger", "ShieldMaiden", "Explorer", "Ranger", "LuteBoi",
         "Looter",
         "Spider" };
-
+  
     playerService.savePlayer(new Player(
         UUID.fromString("6a3f244a-955b-4859-a9a8-db6d2c585646"),
         "Texelo",
@@ -226,7 +226,7 @@ public class StatusController {
             "grass",
             "air", "bucket", "candle" },
         Team.BLUE, null, null, rand.nextDouble() < 0.5 ? true : false, true));
-
+  
     playerService.savePlayer(new Player(
         UUID.fromString("1c5a7191-c0af-474d-bd3d-4f18efc79c02"),
         "Silentspy668",
@@ -237,7 +237,7 @@ public class StatusController {
             "grass",
             "air", "bucket", "candle" },
         Team.BLUE, null, null, rand.nextDouble() < 0.5 ? true : false, true));
-
+  
     playerService.savePlayer(new Player(
         UUID.fromString("a37f4e3e-03ad-4e51-9c6f-e9980879baf1"),
         "Phylaxis_",
@@ -248,7 +248,7 @@ public class StatusController {
             "grass",
             "air", "bucket", "candle" },
         Team.BLUE, null, null, rand.nextDouble() < 0.5 ? true : false, true));
-
+  
     playerService.savePlayer(new Player(
         UUID.fromString("7c59062e-2dab-44f0-9148-dfc5de21ca9a"),
         "Quantum_Disciple",
@@ -259,7 +259,7 @@ public class StatusController {
             "grass",
             "air", "bucket", "candle" },
         Team.BLUE, null, null, rand.nextDouble() < 0.5 ? true : false, true));
-
+  
     playerService.savePlayer(new Player(
         UUID.fromString("7001a316-0b5d-4141-b94a-cbfd7aef358a"),
         "Chickachow",
@@ -270,7 +270,7 @@ public class StatusController {
             "grass",
             "air", "bucket", "candle" },
         Team.RED, null, null, rand.nextDouble() < 0.5 ? true : false, true));
-
+  
     playerService.savePlayer(new Player(
         UUID.fromString("665ec92d-ec52-4453-80c3-c7fe073d7b44"),
         "gongly",
@@ -281,7 +281,7 @@ public class StatusController {
             "grass",
             "air", "bucket", "candle" },
         Team.RED, null, null, rand.nextDouble() < 0.5 ? true : false, true));
-
+  
     playerService.savePlayer(new Player(
         UUID.fromString("7b6fe0c4-9af3-41bd-9356-06ae8b09a851"),
         "ompact",
@@ -292,7 +292,7 @@ public class StatusController {
             "grass",
             "air", "bucket", "candle" },
         Team.RED, null, null, rand.nextDouble() < 0.5 ? true : false, true));
-
+  
     playerService.savePlayer(new Player(
         UUID.fromString("93d3f6d1-4223-414b-9a14-07f8d5e47f35"),
         "Portzerico",
@@ -303,7 +303,7 @@ public class StatusController {
             "grass",
             "air", "bucket", "candle" },
         Team.RED, null, null, rand.nextDouble() < 0.5 ? true : false, true));
-
+  
   }
-*/
+  */
 }
