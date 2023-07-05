@@ -747,8 +747,11 @@ function handleGameEvent(event: GameEvent) {
       if (event.entity.endsWith("wool")) {
         for (var i = 1; i <= 3; i++) {
           var monument = $(".monument-wool." + team + "-wool-" + i);
-          if (monument.attr("src") === undefined) {
-            monument.hide().attr("src", "/assets/img/minecraft/textures/item/" + event.entity + ".png").show("slow");
+          if (monument.data("wool") === event.entity) {
+            return;
+          }
+          else if (!monument.data("wool")){
+            monument.hide().attr("src", "/assets/img/minecraft/textures/item/" + event.entity + ".png").data("wool", event.entity).show("slow");
             return;
           }
         }
@@ -835,7 +838,7 @@ if (window.EventSource != null) {
     if (Array.isArray(events))
       events.forEach(gameEvent => handleGameEvent(gameEvent));
     else
-      handleGameEvent(JSON.parse(events));
+      handleGameEvent(events);
   };
 }
 else {
