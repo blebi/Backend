@@ -15,11 +15,13 @@ import server.models.Player;
 import server.repositories.PlayerRepository;
 
 @Service
+@Transactional
 public class PlayerService {
 
   @Autowired
   PlayerRepository repository;
 
+  @Transactional
   public Player savePlayer(Player player) {
     return repository.save(player);
   }
@@ -31,24 +33,29 @@ public class PlayerService {
     return players;
   }
 
+  @Transactional
   public Map<Player.Location, List<Player>> getPlayersByLocation() {
     return StreamSupport
         .stream(repository.findAll().spliterator(), true)
         .collect(Collectors.groupingBy(player -> player.getLocation()));
   }
 
+  @Transactional
   public boolean hasPlayer(Player player) {
     return repository.existsById(player.getId());
   }
 
+  @Transactional
   public boolean hasPlayer(UUID id) {
     return repository.existsById(id);
   }
 
+  @Transactional
   public Player getPlayer(UUID id) {
     return repository.findById(id).orElse(null);
   }
  
+  @Transactional
   public void clear() {
     repository.deleteAll();
   }

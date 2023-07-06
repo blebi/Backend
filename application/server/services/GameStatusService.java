@@ -11,11 +11,13 @@ import server.models.GameStatus;
 import server.repositories.GameStatusRepository;
 
 @Service
+@Transactional
 public class GameStatusService {
 
   @Autowired
   GameStatusRepository repository;
 
+  @Transactional
   public GameStatus saveGameStatus(GameStatus status) {
     return repository.save(status);
   }
@@ -27,18 +29,22 @@ public class GameStatusService {
     return GameStatus;
   }
 
+  @Transactional
   public boolean hasGameStatus(GameStatus GameStatus) {
     return repository.existsById(GameStatus.getEntity());
   }
 
+  @Transactional
   public boolean hasGameStatus(String entity) {
     return repository.existsById(entity);
   }
 
+  @Transactional
   public GameStatus getGameStatus(String entity) {
     return repository.findById(entity).orElse(null);
   }
- 
+
+  @Transactional
   public void clear() {
     repository.deleteAll();
   }

@@ -48,7 +48,7 @@ public class StatusController {
   @Autowired
   private GameStatusService gameStatusService;
 
-  @Transactional
+
   @GetMapping("/")
   String getStatus(Model model) {
     Location[][] locations = Player.locations;
@@ -56,6 +56,7 @@ public class StatusController {
     return "status";
   }
 
+  @Transactional
   @GetMapping("/update/clear")
   @ResponseBody
   String clearPlayers() {
@@ -77,6 +78,7 @@ public class StatusController {
     return emitter;
   }
 
+  @Transactional
   @GetMapping("/sse/event")
   SseEmitter getSSEGameEvent() {
     SseEmitter emitter = eventEmitters.add();
@@ -93,6 +95,7 @@ public class StatusController {
     return emitter;
   }
 
+  @Transactional
   @PostMapping("/update/player")
   @ResponseBody
   Player postPlayer(@RequestBody Player player, HttpServletResponse response) {
@@ -106,6 +109,7 @@ public class StatusController {
     return playerService.savePlayer(player);
   }
 
+  @Transactional
   @PatchMapping("/update/player")
   @ResponseBody
   Player patchPlayer(@RequestBody JSONObject playerJSON, HttpServletResponse response)
@@ -128,6 +132,7 @@ public class StatusController {
     return playerService.savePlayer(player);
   }
 
+  @Transactional
   @PostMapping("/update/players")
   @ResponseBody
   List<Player> postPlayers(@RequestBody List<Player> players, HttpServletResponse response) {
@@ -149,6 +154,7 @@ public class StatusController {
     return result;
   }
 
+  @Transactional
   @PatchMapping("/update/players")
   @ResponseBody
   @SuppressWarnings("unchecked")
@@ -175,10 +181,10 @@ public class StatusController {
       player.setDead(false);
       result.add(playerService.savePlayer(player));
     }
-    //emitters.send(playerArrayJSON);
     return result;
   }
 
+  @Transactional
   @PostMapping("/update/notification")
   @ResponseBody
   String postNotification(@RequestBody String message) {
@@ -186,6 +192,7 @@ public class StatusController {
     return message;
   }
 
+  @Transactional
   @PostMapping("/update/event")
   @ResponseBody
   GameStatus postGameEvent(@RequestBody GameStatus event) {
@@ -194,6 +201,7 @@ public class StatusController {
     return event;
   }
 
+  @Transactional
   @PostMapping("/update/events")
   @ResponseBody
   List<GameStatus> postGameEvents(@RequestBody List<GameStatus> events) {
