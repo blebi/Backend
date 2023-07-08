@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <title>Map Fragment</title>
+</head>
+
+<body>
+    <div class="map" th:fragment="map">
+      <th:block th:each="islandRow : ${locations}">
+        <div class="island" th:each="island : ${islandRow}" th:id="${island}">
+        </div>
+      </th:block>
+      <img class="monument-wool BLUE-wool-1">
+      <img class="monument-wool BLUE-wool-2">
+      <img class="monument-wool BLUE-wool-3">
+      <img class="monument-wool RED-wool-1">
+      <img class="monument-wool RED-wool-2">
+      <img class="monument-wool RED-wool-3">
+    
+      <img class="monument-wool dungeon-wool blue-iron">
+      <img class="monument-wool dungeon-wool blue-gold">
+      <img class="monument-wool dungeon-wool blue-diamond">
+      <img class="monument-wool dungeon-wool red-iron">
+      <img class="monument-wool dungeon-wool red-gold">
+      <img class="monument-wool dungeon-wool red-diamond">
+    
+    
+      <!-- KEYS -->
+      <div class="key-container dungeon-key blue-iron">
+        <div class="key">
+          <div class="key-mask iron"></div>
+        </div>
+      </div>
+      <div class="key-container dungeon-key blue-gold">
+        <div class="key">
+          <div class="key-mask gold"></div>
+        </div>
+      </div>
+      <div class="key-container dungeon-key blue-diamond">
+        <div class="key">
+          <div class="key-mask diamond"></div>
+        </div>
+      </div>
+      <div class="key-container dungeon-key red-iron">
+        <div class="key">
+          <div class="key-mask iron"></div>
+        </div>
+      </div>
+      <div class="key-container dungeon-key red-gold">
+        <div class="key">
+          <div class="key-mask gold"></div>
+        </div>
+      </div>
+      <div class="key-container dungeon-key red-diamond">
+        <div class="key">
+          <div class="key-mask diamond"></div>
+        </div>
+      </div>
+    
+      <!-- LOCKS -->
+      <div class="lock-container dungeon-lock blue-iron">
+        <div class="lock">
+          <div class="lock-mask iron"></div>
+        </div>
+      </div>
+      <div class="lock-container dungeon-lock blue-gold">
+        <div class="lock">
+          <div class="lock-mask gold"></div>
+        </div>
+      </div>
+      <div class="lock-container dungeon-lock blue-diamond">
+        <div class="lock">
+          <div class="lock-mask diamond"></div>
+        </div>
+      </div>
+      <div class="lock-container dungeon-lock red-iron">
+        <div class="lock">
+          <div class="lock-mask iron"></div>
+        </div>
+      </div>
+      <div class="lock-container dungeon-lock red-gold">
+        <div class="lock">
+          <div class="lock-mask gold"></div>
+        </div>
+      </div>
+      <div class="lock-container dungeon-lock red-diamond">
+        <div class="lock">
+          <div class="lock-mask diamond"></div>
+        </div>
+      </div>
+    </div>
+</body>
+
+</html>

@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,9 +37,10 @@ import server.services.PlayerService;
 @Transactional
 @RequestMapping("/ctw/status")
 public class StatusController {
-  private final SseEmitters emitters = new SseEmitters();
+  private final SseEmitters playerEmitters = new SseEmitters();
   private final SseEmitters notificationEmitters = new SseEmitters();
   private final SseEmitters eventEmitters = new SseEmitters();
+  private final SseEmitters clearEmitters = new SseEmitters();
 
   @Autowired
   private PlayerService playerService;
@@ -53,7 +53,24 @@ public class StatusController {
   String getStatus(Model model) {
     Location[][] locations = Player.locations;
     model.addAttribute("locations", locations);
-    return "status";
+    return "status/status";
+  }
+
+  @GetMapping("/map")
+  String getMap(Model model) {
+    Location[][] locations = Player.locations;
+    model.addAttribute("locations", locations);
+    return "status/map";
+  }
+
+  @GetMapping("/players")
+  String getPlayers(Model model) {
+    return "status/players";
+  }
+
+  @GetMapping("/notifications")
+  String getNotifications(Model model) {
+    return "status/notifications";
   }
 
   @Transactional
@@ -63,17 +80,17 @@ public class StatusController {
     System.out.println("CLEAR");
     playerService.clear();
     gameStatusService.clear();
-    emitters.send("clear");
+    clearEmitters.send("clear");
     WebSecurityConfig.updatePasscode();
     return "cleared";
   }
 
   @Transactional
-  @GetMapping("/sse")
-  SseEmitter getSSE() {
-    SseEmitter emitter = emitters.add();
+  @GetMapping("/sse/players")
+  SseEmitter getSSEPlayers() {
+    SseEmitter emitter = playerEmitters.add();
     if (!playerService.getPlayers().isEmpty()) {
-      emitters.send(playerService.getPlayers());
+      playerEmitters.send(playerService.getPlayers());
     }
     return emitter;
   }
@@ -91,7 +108,12 @@ public class StatusController {
   @GetMapping("/sse/notification")
   SseEmitter getSSENotifications() {
     SseEmitter emitter = notificationEmitters.add();
+    return emitter;
+  }
 
+  @GetMapping("/sse/clear")
+  SseEmitter getClear() {
+    SseEmitter emitter = clearEmitters.add();
     return emitter;
   }
 
@@ -104,7 +126,7 @@ public class StatusController {
     }
 
     player = playerService.savePlayer(player);
-    emitters.send(player);
+    playerEmitters.send(player);
     player.setDead(false);
     return playerService.savePlayer(player);
   }
@@ -118,7 +140,7 @@ public class StatusController {
     Player player;
     UUID id = UUID.fromString(playerJSON.getAsString("id"));
 
-    emitters.send(playerJSON);
+    playerEmitters.send(playerJSON);
     if (!playerService.hasPlayer(id)) {
       response.setStatus(201);
       player = objectMapper.readValue(playerJSON.toJSONString(), Player.class);
@@ -145,7 +167,7 @@ public class StatusController {
       result.add(playerService.savePlayer(player));
     }
 
-    emitters.send(result);
+    playerEmitters.send(result);
 
     for (Player player : result) {
       player.setDead(false);
@@ -161,7 +183,7 @@ public class StatusController {
   List<Player> patchPlayers(@RequestBody JSONArray playerArrayJSON, HttpServletResponse response)
       throws JsonMappingException, JsonProcessingException {
 
-    emitters.send(playerArrayJSON);
+    playerEmitters.send(playerArrayJSON);
     List<Player> result = new ArrayList<>();
 
     ObjectMapper objectMapper = new ObjectMapper();

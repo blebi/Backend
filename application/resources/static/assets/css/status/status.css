@@ -35,7 +35,7 @@ body {
 
 .player-head-wrapper.grow {
   position: absolute;
-  width: 60% !important;
+  width: 80% !important;
   z-index: 11;
   left: 0;
   right: 0;

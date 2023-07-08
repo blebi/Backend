@@ -10,3 +10,5 @@ mvnw.cmd
 node_modules
 package.json
 package-lock.json
+passcode.txt
+logs

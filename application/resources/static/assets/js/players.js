@@ -1,7 +1,5 @@
-import { NotificationListener } from "./notificationListener.js";
 import { PlayerPanel } from "./playerPanel.js";
 import { SSEListener } from "./sseListener.js";
-import { StatusMap } from "./statusMap.js";
 var masonryOptions = {
     itemSelector: '.grid-item',
     percentPosition: true,
@@ -11,13 +9,11 @@ var masonryOptions = {
     initLayout: false
 };
 // initialize Masonry
-var $grid = $('.grid').masonry(masonryOptions);
+export var $grid = $('.grid').masonry(masonryOptions);
 setTimeout(function () {
     $grid.masonry('reloadItems');
     $grid.masonry('layout');
 }, 1000);
-var map = new StatusMap();
-new NotificationListener();
 PlayerPanel.setGrid($grid);
 //function setStatus(updates: Player[]) {
 //  updates.forEach(function (player) {
@@ -42,13 +38,12 @@ PlayerPanel.setGrid($grid);
 //  });
 //  //Generate panels
 //  players.forEach(player => {
-//    PlayerPanel.getPanel(player).setGrid($grid);
+//    PlayerPanel.getPanel(player).setGrid($grid);;
 //  });
 //  //Append panels to grid
 //  if (PlayerPanel.getAllPanels()) {
 //    $grid.append(PlayerPanel.getAllPanels())
 //  }
-//  map.updatePlayers(players);
 //  players.forEach(player => {
 //    PlayerPanel.getPanel(player)!.update(player);
 //  })
@@ -56,8 +51,4 @@ PlayerPanel.setGrid($grid);
 //}
 new SSEListener("clear", () => {
     PlayerPanel.clear();
-    map.clear();
 });
-//new SSEListener("players", (event: MessageEvent<any>) => {
-//  setStatus(Player.fromJSON(JSON.parse(event.data)));
-//});
