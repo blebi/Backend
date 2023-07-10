@@ -25,11 +25,11 @@ export class PlayerPanel {
     var players = new Array();
 
     updates.forEach(player => {
-
       //If wasn't on team before.......
-      if (Player.getPlayer(player) && Player.getPlayer(player).onTeam()) {
+      if (Player.getPlayer(player) && !Player.getPlayer(player).onTeam()) {
         // but is now, full update
         if (player.onTeam()) {
+          console.log("full update");
           players.push(Player.updatePlayer(player));
         }
       }
@@ -41,25 +41,26 @@ export class PlayerPanel {
     });
 
     //Generate panels
-    players.forEach(player => {
-      PlayerPanel.getPanel(player);
+    var playerPanels: JQuery<HTMLElement> = $('<div>', {
+      class: "panels_temp",
     });
 
-    //Append panels to grid
-    if (PlayerPanel.getAllPanels() && PlayerPanel.$grid) {
-
-      PlayerPanel.$grid.append(PlayerPanel.getAllPanels())
-    }
-
     players.forEach(player => {
-      PlayerPanel.getPanel(player)!.update(player);
-    })
+      if (!PlayerPanel.hasPanel(player)) {
+          playerPanels.append(PlayerPanel.getPanel(player).panel);
+      }
+      PlayerPanel.getPanel(player).update(player);
+    });
 
-    if (PlayerPanel.$grid) {
-      PlayerPanel.$grid.masonry('reloadItems').masonry('layout');
+    playerPanels = playerPanels.children();
+    if (playerPanels) {
+      //Append panels to grid
+      if (PlayerPanel.$grid && !playerPanels.hasClass("panels_temp")) {
+        PlayerPanel.$grid.append(playerPanels)
+          //.masonry("appended", playerPanels!);
+      }
     }
   }
-
 
   public static setGrid($grid: JQuery<HTMLElement>) {
     PlayerPanel.$grid = $grid;
@@ -69,8 +70,10 @@ export class PlayerPanel {
     this.panels.forEach(element => {
       element.remove();
     });
+    this.panels.clear();
   }
 
+  //TODO must be a better way of doing this
   public static getAllPanels() {
     var playerPanels: JQuery<HTMLElement> = $('<div>', {
       class: "panels_temp",
@@ -109,7 +112,6 @@ export class PlayerPanel {
     this.setWool(update);
     this.setKey(update);
     this.setClass(update);
-
   }
 
   private setClass(player: Player) {
@@ -117,7 +119,6 @@ export class PlayerPanel {
       return;
 
     this.panel.find(".player-status-head-class").attr("src", "/assets/img/classes/" + (player.playerClass == null ? "unknown" : player.playerClass) + ".png")
-
   }
 
   private setKey(player: Player) {

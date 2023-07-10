@@ -1,8 +1,8 @@
 import { Player } from "./models.js";
 import { SSEListener } from "./sseListener.js";
 export class StatusMap {
+    //heads: Map<string, JQuery<HTMLElement>> = new Map();
     constructor() {
-        this.heads = new Map();
         this.listener = new SSEListener("event", (event) => {
             var events = JSON.parse(event.data);
             if (Array.isArray(events))
@@ -15,7 +15,7 @@ export class StatusMap {
             var players = new Array();
             updates.forEach(player => {
                 //If wasn't on team before.......
-                if (Player.getPlayer(player) && Player.getPlayer(player).onTeam()) {
+                if (Player.getPlayer(player) && !Player.getPlayer(player).onTeam()) {
                     // but is now, full update
                     if (player.onTeam()) {
                         players.push(Player.updatePlayer(player));
@@ -31,18 +31,14 @@ export class StatusMap {
         });
     }
     clear() {
-        $(".player-head-wrapper").each(function () {
-            this.remove();
-        });
+        //this.heads.clear();
+        $(".player-head-wrapper").remove();
+        $(".headPlaceholder").remove();
         $(".monument-wool").each(function () {
             this.removeAttribute('src');
         });
-        $(".dungeon-lock").each(function () {
-            $(this).show();
-        });
-        $(".dungeon-key").each(function () {
-            $(this).show();
-        });
+        $(".dungeon-lock").show();
+        $(".dungeon-key").show();
     }
     dropWool(location, wool) {
         $(".dungeon-wool." + location)
@@ -89,7 +85,13 @@ export class StatusMap {
     }
     ;
     getHead(player) {
-        return this.heads.get(player.id);
+        var head = $(this.getHeadId(player));
+        if (!head.length)
+            return null;
+        return head;
+    }
+    getHeadId(player) {
+        return "#" + player.id + "_location";
     }
     updatePlayers(players) {
         this.setLocations(players);
@@ -144,6 +146,8 @@ export class StatusMap {
     setLocations(players) {
         var moves = new Map();
         var affectedHeadIds = new Set();
+        //REMOVE EXISTING PLACEHOLDERS (INCASE IT'S BUGGED)
+        $(".headPlaceholder").remove();
         function getPlaceholder(id) {
             return $('<div>', {
                 id: id,
@@ -164,27 +168,28 @@ export class StatusMap {
             children.width(width);
         }
         for (var player of players) {
-            var head = this.getHead(player);
-            //HEAD EXISTS, REMOVE HEAD
-            if (head && (player.location === null || player.team === null)) {
-                head.parent().children().each(function () {
-                    affectedHeadIds.add(this.id);
-                });
-                moves.set(head.attr("id"), null);
-                continue;
-            }
-            //NOT REMOVING OR MOVING HEAD
-            if (player.location === undefined) {
-                continue;
-            }
-            //HEAD ALREADY IN CORRECT LOCATION
-            if (head && head.parent().attr('id') === player.location) {
-                continue;
-            }
-            /**********************************/
+            //console.log("new move:", player, this.getHead(player), this.getHead(player)?.parent())
             var newLocation = $("#" + player.location);
-            //HEAD EXISTS, MOVE TO NEW LOCATION
-            if (head) {
+            var head = this.getHead(player);
+            if (head != null) {
+                //NOT REMOVING OR MOVING HEAD
+                if (player.location === undefined) {
+                    continue;
+                }
+                //HEAD EXISTS, REMOVE HEAD
+                if ((player.location === null || player.team === null)) {
+                    head.parent().children().each(function () {
+                        affectedHeadIds.add(this.id);
+                    });
+                    moves.set(head.attr("id"), null);
+                    continue;
+                }
+                //HEAD ALREADY IN CORRECT LOCATION
+                if (head.parent().attr('id') === player.location) {
+                    continue;
+                }
+                /**********************************/
+                //HEAD EXISTS, MOVE TO NEW LOCATION
                 var currentLocation = head.parent();
                 currentLocation.children().each(function () {
                     affectedHeadIds.add(this.id);
@@ -196,38 +201,35 @@ export class StatusMap {
                 continue;
             }
             //INSERT NEW HEAD
-            {
-                var key = $('<div>', {
-                    class: 'key-container'
-                }).hide().append($('<div>', {
-                    class: 'key'
-                }).append($('<div>', {
-                    class: 'key-mask'
-                }).addClass(player.dungeon_key ? player.dungeon_key : "")));
-                var newhead = $('<div>', {
-                    id: player.id + "_location",
-                    class: 'player-head-wrapper border border-3',
-                    css: {
-                        opacity: 0,
-                        position: "absolute"
-                    }
-                }).append($('<img>', {
-                    class: 'player-head h-100',
-                    src: player.imgLink
-                })).append($('<img>', {
-                    class: 'player-head-class',
-                    src: Player.getPlayer(player).playerClass ? ("/assets/img/classes/" + Player.getPlayer(player).playerClass + ".png") : "/assets/img/classes/unknown.png"
-                }).hide()).append($('<img>', {
-                    class: 'player-head-wool',
-                    src: !player.wool ? ""
-                        : "/assets/img/minecraft/textures/item/" + player.wool + ".png"
-                })).append(key.addClass("player-head-key"));
-                newhead.appendTo(newLocation);
-                this.heads.set(player.id, newhead);
-                newLocation.children().each(function () {
-                    affectedHeadIds.add(this.id);
-                });
-            }
+            var key = $('<div>', {
+                class: 'key-container'
+            }).hide().append($('<div>', {
+                class: 'key'
+            }).append($('<div>', {
+                class: 'key-mask'
+            }).addClass(player.dungeon_key ? player.dungeon_key : "")));
+            head = $('<div>', {
+                id: player.id + "_location",
+                class: 'player-head-wrapper border border-3',
+                css: {
+                    opacity: 0,
+                    position: "absolute"
+                }
+            }).append($('<img>', {
+                class: 'player-head h-100',
+                src: player.imgLink
+            })).append($('<img>', {
+                class: 'player-head-class',
+                src: Player.getPlayer(player).playerClass ? ("/assets/img/classes/" + Player.getPlayer(player).playerClass + ".png") : "/assets/img/classes/unknown.png"
+            }).hide()).append($('<img>', {
+                class: 'player-head-wool',
+                src: !player.wool ? ""
+                    : "/assets/img/minecraft/textures/item/" + player.wool + ".png"
+            })).append(key.addClass("player-head-key"));
+            head.appendTo(newLocation);
+            newLocation.children().each(function () {
+                affectedHeadIds.add(this.id);
+            });
         }
         affectedHeadIds.forEach(function (headId) {
             var head = $("#" + headId);
@@ -236,20 +238,20 @@ export class StatusMap {
             }
         });
         moveTo(moves);
-        function moveTo(heads) {
+        function moveTo(moves) {
             var tops = new Map();
             var lefts = new Map();
-            heads.forEach(function (location, head) {
-                var headElement = $("#" + head);
-                var map = headElement.parent();
+            moves.forEach(function (location, headId) {
+                var headElement = $("#" + headId);
+                var currentLocation = headElement.parent();
                 var border = parseFloat(headElement.css("borderTop"));
-                var parentWidth = headElement.parent()[0].getBoundingClientRect().width;
-                var top = (((headElement.offset().top - map.offset().top) - border) / parentWidth) * 100 + "%";
-                var left = (((headElement.offset().left - map.offset().left) - border) / parentWidth) * 100 + "%";
-                tops.set(head, top);
-                lefts.set(head, left);
+                var parentWidth = currentLocation[0].getBoundingClientRect().width;
+                var top = (((headElement.offset().top - currentLocation.offset().top) - border) / parentWidth) * 100 + "%";
+                var left = (((headElement.offset().left - currentLocation.offset().left) - border) / parentWidth) * 100 + "%";
+                tops.set(headId, top);
+                lefts.set(headId, left);
             });
-            heads.forEach(function (locationId, headId) {
+            moves.forEach(function (locationId, headId) {
                 var head = $("#" + headId);
                 var location = locationId ? $("#" + locationId) : null;
                 //Stamp in place

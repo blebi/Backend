@@ -26,13 +26,13 @@ public class Player {
   }
 
   public static Location[][] locations = {
-      { BLUE_DIAMOND_BOSS, null, null, BLUE_GOLD_BOSS, null, null, null },
-      { null, BLUE_DIAMOND, BLUE_GOLD_DIAMOND, BLUE_GOLD, BLUE_SPAWN_GOLD, BLUE_SPAWN, null },
-      { null, RED_IRON_DIAMOND, null, BLUE_GOLD_MONUMENT, null, BLUE_SPAWN_IRON, null },
-      { RED_IRON_BOSS, RED_IRON, RED_IRON_MONUMENT, MONUMENT, BLUE_IRON_MONUMENT, BLUE_IRON, BLUE_IRON_BOSS },
-      { null, RED_SPAWN_IRON, null, RED_GOLD_MONUMENT, null, BLUE_IRON_DIAMOND, null },
-      { null, RED_SPAWN, RED_SPAWN_GOLD, RED_GOLD, RED_GOLD_DIAMOND, RED_DIAMOND, null },
-      { null, null, null, RED_IRON_BOSS, null, null, RED_DIAMOND_BOSS }
+      { RED_DIAMOND_BOSS, null, null, RED_GOLD_BOSS, null, null, null },
+      { null, RED_DIAMOND, RED_GOLD_DIAMOND, RED_GOLD, RED_SPAWN_GOLD, RED_SPAWN, null },
+      { null, BLUE_IRON_DIAMOND, null, RED_GOLD_MONUMENT, null, RED_SPAWN_IRON, null },
+      { BLUE_IRON_BOSS, BLUE_IRON, BLUE_IRON_MONUMENT, MONUMENT, RED_IRON_MONUMENT, RED_IRON, RED_IRON_BOSS },
+      { null, BLUE_SPAWN_IRON, null, BLUE_GOLD_MONUMENT, null, RED_IRON_DIAMOND, null },
+      { null, BLUE_SPAWN, BLUE_SPAWN_GOLD, BLUE_GOLD, BLUE_GOLD_DIAMOND, BLUE_DIAMOND, null },
+      { null, null, null, BLUE_GOLD_BOSS, null, null, BLUE_DIAMOND_BOSS }
   };
 
   public static enum Team {
